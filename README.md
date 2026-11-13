@@ -7,7 +7,7 @@ Familien-App für den Alltag: Wer braucht was, wer schuldet wem was, wer hat bal
 - **Schulden** eintragen, Rechnungen teilen, in Teilbeträgen zurückzahlen. Wer etwas für jemanden mitbringt und den Preis einträgt, erzeugt automatisch eine Schuld
 - **Geburtstage** mit Erinnerung ab 14 Tagen vorher, bis man das Geschenk abhakt. Geschenkideen sehen alle außer dem Geburtstagskind
 
-> Status: Projekt-Setup. Die App selbst wird gerade aufgebaut.
+> Status: Grundgerüst steht. Erstes Feature: [Familie und Anmeldung](docs/spec/familie-und-anmeldung.md).
 
 ## Technik
 
@@ -16,7 +16,7 @@ Familien-App für den Alltag: Wer braucht was, wer schuldet wem was, wer hat bal
 | App | Expo (React Native) + TypeScript, ein Code für iPhone, Android und Web |
 | Backend | Supabase: Postgres mit Row Level Security, Auth, Realtime, Edge Functions |
 | Benachrichtigungen | Geofencing auf dem Gerät, Push über Expo Push Service |
-| CI | GitHub Actions: Lint, Typecheck, Tests |
+| CI | GitHub Actions: Lint, Typecheck, Tests, Web-Build, Datenbank-Migrationen und SQL-Tests |
 
 ## Wie hier entwickelt wird
 
@@ -41,4 +41,11 @@ Gemergt wird nur von einem Menschen.
 
 ## Lokal starten
 
-Folgt, sobald die Expo-App angelegt ist. Schlüssel kommen in `.env.local` (Vorlage: [`.env.example`](.env.example)), niemals ins Repo.
+```bash
+npm install && npm run setup
+cp apps/mobile/.env.example apps/mobile/.env.local   # Werte eintragen, wird nie committet
+npm run db:start                                       # lokale Supabase (Docker)
+npm start                                              # App, mit Expo Go scannen
+```
+
+Details: [`docs/setup.md`](docs/setup.md) · Architektur: [`docs/architektur.md`](docs/architektur.md)

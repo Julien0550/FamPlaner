@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    name: App (Lint, Typecheck, Tests, Web-Build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    env:
+      EXPO_NO_TELEMETRY: 1
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: apps/mobile/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test -- --ci
+      - name: Web-Build prüfen
+        run: npx expo export --platform web --output-dir dist
+
+  datenbank:
+    name: Datenbank (Migrationen, SQL-Tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.1.0
+
+      - name: Postgres starten und alle Migrationen einspielen
+        run: supabase db start
+
+      - name: SQL-Tests (pgTAP)
+        run: |
+          if ls supabase/tests/*.sql >/dev/null 2>&1; then
+            supabase test db
+          else
+            echo "Noch keine SQL-Tests in supabase/tests/."
+          fi
