@@ -1,0 +1,33 @@
+# Secrets – niemals committen
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+credentials.json
+
+# Supabase lokal
+supabase/.temp/
+supabase/.branches/
+
+# Node / Expo
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+
+# Claude Code: persönliche Einstellungen (Team-Einstellungen in settings.json bleiben drin)
+.claude/settings.local.json
+
+# Screenshots des ui-designers (nur zum Anschauen)
+.screenshots/
+
+# System
+.DS_Store
+Thumbs.db
